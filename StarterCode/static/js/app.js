@@ -1,36 +1,34 @@
 // Use d3 to read in samples.json
 
-// let dataPromise = d3.json("./samples.json");
+d3.json("././samples.json").then(data => {
 
-// function processData(data){
-//     console.log(data);
-// }
-
-// dataPromise.then(processData);
-
-// Create function to get info needed
-function getInfo() {
-    //Read in JSON
-    d3.json("./samples.json").then ((data) =>{
         console.log(data)
-    //collect the out ids
-    // var otuId = data.samples[0].otu_ids;
-    // console.log(otuId)
+        //get ids for dropdown
+        data.names.forEach(element => {
+            d3.select('#selDataset').append('option').text(element)
+        });
+
     });
 
+    function optionChanged(info) {
+        d3.json("././samples.json").then(data => {
+        data.samples.forEach( d => {
+            if (d.id == info) {
+                var otu= d.otu_ids
+                var otuValues = d.sample_values
+                var otuLabels = d.otu_labels
+                console.log(otu)
 
+                var trace = [{
+                    x:otuValues.slice(0,10).reverse(),
+                    y:otu.slice(0,10).reverse().map(d => `OTUID ${d}`),
+                    type: 'bar',
+                    orientation: 'h',
+                    hovertext: otuLabels.slice(0,10).reverse()
 
-//Get a handle on the dropdown
-// data.map((
-
-    
-// ))  
-// let dropDown = d3.select('#selDataset');
-
-
-
-
-// //Get top out_ids
-// function getId(data) {
-//     return data.samples[0].out_ids
-// }
+                }]
+                Plotly.newPlot('bar', trace)
+            }
+        })
+    })
+    }
